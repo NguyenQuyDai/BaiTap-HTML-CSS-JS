@@ -33,26 +33,23 @@ document.addEventListener("DOMContentLoaded", function() {
             var cell = document.createElement("div");
             cell.classList.add("cell");
             cell.innerHTML = cellData;
+            cell.onclick = function() {
+                // Lấy dữ liệu từ các ô trong hàng được click
+                // Hiển thị thông tin xe ở cột bên phải
+                document.getElementById("carName").value = cells[2];
+                document.getElementById("carImage").value = carImage;
+                document.getElementById("carBrand").value = cells[3];
+                document.getElementById("carPrice").value = cells[4];
+                document.getElementById("carDescription").value = ""; // Không có dữ liệu mô tả trong bảng
+                document.getElementById("contactPerson").value = cells[5];
+                document.getElementById("contactNumber").value = cells[6];
+                document.getElementById("contactEmail").value = cells[7];
+            }
             newRow.appendChild(cell);
         });
 
         // Thêm hàng mới vào danh sách xe
         carList.appendChild(newRow);
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    // Xóa xe khi nhấn nút "Xóa"
-    document.getElementById("delete").addEventListener("click", function() {
-        // Hiển thị hộp thoại xác nhận
-        var confirmation = confirm("Bạn có chắc chắn muốn xóa xe này?");
-        if (confirmation) {
-            // Xóa hàng đang được chọn (nếu có)
-            var selectedRow = document.querySelector("#carList .row.selected");
-            if (selectedRow) {
-                selectedRow.remove();
-            }
-        }
     });
 
     // Tìm kiếm xe khi người dùng nhập vào ô tìm kiếm
@@ -76,37 +73,18 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
-});
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Lấy danh sách các hàng trong bảng xe
-    var rows = document.querySelectorAll("#carList .row");
+    // Hàm xóa hàng trong bảng
+    function deleteRow(row) {
+        row.parentNode.removeChild(row); // Xóa hàng khỏi bảng
+    }
 
-    // Đặt sự kiện "click" cho mỗi hàng
-    rows.forEach(function(row) {
-        row.addEventListener("click", function() {
-            // Lấy dữ liệu từ các ô trong hàng được click
-            var cells = row.querySelectorAll(".cell");
-
-            // Hiển thị thông tin xe ở cột bên phải
-            document.getElementById("carName").value = cells[2].innerText;
-            document.getElementById("carImage").value = cells[1].querySelector("img").src;
-            document.getElementById("carBrand").value = cells[3].innerText;
-            document.getElementById("carPrice").value = cells[4].innerText;
-            document.getElementById("carDescription").value = ""; // Không có dữ liệu mô tả trong bảng
-            document.getElementById("contactPerson").value = cells[5].innerText;
-            document.getElementById("contactNumber").value = cells[6].innerText;
-            document.getElementById("contactEmail").value = cells[7].innerText;
-
-            // Xóa lớp 'selected' của tất cả các hàng khác
-            var allRows = document.querySelectorAll("#carList .row");
-            allRows.forEach(function(row) {
-                row.classList.remove("selected");
-            });
-
-            // Thêm lớp 'selected' cho hàng được click để làm nổi bật
-            row.classList.add("selected");
-            console.log("Click row");
-        });
+    // Gắn sự kiện "click" vào nút "Xóa"
+    document.getElementById("delete").addEventListener("click", function() {
+        var carList = document.getElementById("carList");
+        var rows = carList.getElementsByClassName("row");
+        if (rows.length > 0) {
+            deleteRow(rows[rows.length - 1]); // Xóa hàng cuối cùng trong bảng
+        }
     });
 });
