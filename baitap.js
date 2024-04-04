@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
+    var currentRow; // Biến để lưu trữ dòng hiện tại được chọn
+
     // Gắn một sự kiện "click" vào nút "Lưu"
     document.getElementById("saveButton").addEventListener("click", function() {
         // Lấy giá trị nhập vào từ các trường trong biểu mẫu
@@ -44,6 +46,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById("contactPerson").value = cells[5];
                 document.getElementById("contactNumber").value = cells[6];
                 document.getElementById("contactEmail").value = cells[7];
+
+                currentRow = newRow; // Lưu trữ dòng hiện tại được chọn
             }
             newRow.appendChild(cell);
         });
@@ -77,14 +81,26 @@ document.addEventListener("DOMContentLoaded", function() {
     // Hàm xóa hàng trong bảng
     function deleteRow(row) {
         row.parentNode.removeChild(row); // Xóa hàng khỏi bảng
+        updateRowNumbers(); // Cập nhật lại số thứ tự
+    }
+
+    // Hàm cập nhật lại số thứ tự
+    function updateRowNumbers() {
+        var rows = document.querySelectorAll("#carList .row");
+        rows.forEach(function(row, index) {
+            var cells = row.querySelectorAll(".cell");
+            cells[0].textContent = index + 1; // Cập nhật lại số thứ tự
+        });
     }
 
     // Gắn sự kiện "click" vào nút "Xóa"
     document.getElementById("delete").addEventListener("click", function() {
-        var carList = document.getElementById("carList");
-        var rows = carList.getElementsByClassName("row");
-        if (rows.length > 0) {
-            deleteRow(rows[rows.length - 1]); // Xóa hàng cuối cùng trong bảng
+        if (currentRow) {
+            var confirmDelete = confirm("Bạn có muốn xóa không?"); // Thông báo xác nhận
+            if (confirmDelete) {
+                deleteRow(currentRow); // Xóa dòng hiện tại được chọn
+                currentRow = null; // Đặt lại dòng hiện tại được chọn
+            }
         }
     });
 });
